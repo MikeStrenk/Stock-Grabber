@@ -106,4 +106,6 @@ end = datetime.datetime.now
 print('The following stock tickers had an Attribute Error:')
 print(did_not_work_List)
 print('The program took this long to finish:')
-end - start
+
+# @TODO this time calculation needs to be improved, its currently not working
+# end - start
