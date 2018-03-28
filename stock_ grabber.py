@@ -9,8 +9,8 @@ import pandas as pd
 
 # Establishing constant variables
 minmax = re.compile(r'(\S+)\s\-\s(\S+)')
-reader = pd.read_csv("SP500.csv", usecols="Ticker symbol")
-symbolList = list(reader)
+reader = pd.read_csv("SP500.csv", usecols=['Ticker symbol'])
+symbolList = reader.values.tolist()
 closingDate = datetime.datetime.now()
 # Logging a list of stocks that did not get scraped
 did_not_work_List = []
@@ -18,7 +18,7 @@ did_not_work_List = []
 # Pulling in the database login info from another file to keep login credentials private
 db = database_locator.db_info()
 
-# Setting up the
+# Setting up the table
 class Stock(Model):
     timestamp = DateTimeField(default=datetime.datetime.now)
     ticker = CharField(max_length=6)
