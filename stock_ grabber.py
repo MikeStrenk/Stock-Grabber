@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import re
 import datetime
 
@@ -17,7 +15,7 @@ closingDate = datetime.datetime.now()
 # Logging a list of stocks that did not get scraped
 did_not_work_List = []
 
-# Assigning the database login info from a separate file to keep database login credentials private
+# Pulling in the database login info from another file to keep login credentials private
 db = database_locator.db_info()
 
 # Setting up the
@@ -43,6 +41,7 @@ def wsjQuoter(symbol):
     try:
         quote_page = 'http://quotes.wsj.com/'+str(symbol)
 
+        # TODO 
         # Future placeholder for passing a list through a simpler / reusable soup.find function
         # classList = ['companyName', 'tickerName', 'data_data', 'timestamp_value', 'quote_val']
 
@@ -55,7 +54,8 @@ def wsjQuoter(symbol):
         price_box = soup.find('span', id='quote_val')
         closingPrice = price_box.text.strip().replace(',', '')
 
-        # After scraping, data_data list contains several data points, including max, min and volume traded
+        # After scraping, data_data list contains several data points
+        # including max, min and volume traded
         data_data = []
         range_box = soup.findAll('span', attrs={'class': 'data_data'})
         for range in range_box:
