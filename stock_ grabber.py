@@ -87,6 +87,9 @@ def wsjQuoter(symbol):
     except AttributeError:
         print('{} didnt work due to an Attribute Error'.format(symbol))
         did_not_work_List.append(symbol)
+    except HTTPError:
+        print('{} raised an HTTP Error'.format(symbol))
+        did_not_work_List.append(symbol)
 
 
 # Executing the magic
