@@ -1,2 +1,3 @@
-database_locator.py
-__pycache__/database_locator.cpython-36.pyc
+database_info.py
+/__pycache__
+/.vscode
