@@ -10,14 +10,16 @@ import requests
 import time
 
 # import urllib.request # Delete this one
+
 from bs4 import BeautifulSoup
 from peewee import *
+import PyMySQL.cursors
+#https://pymysql.readthedocs.io/en/latest/user/examples.html
 
 from database_info import Stock, db_info
 
 # @TODO how to append to a text file
 # @TODO clean up variable names
-# @TODO migrate to requests module
 
 loop_delay = 0 # delay in seconds to deal with potential server errors
 
@@ -153,7 +155,7 @@ def write_to_log(time_to_finish, did_not_work_List):
     '''.format(closingDate, did_not_work_List, time_elapsed)
     
     print(output)
-    file = open('Resources/log.txt','w')
+    file = open('log.txt','a')
     file.write(output)
     file.close() 
     # file.append()
