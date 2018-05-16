@@ -12,39 +12,29 @@ import time
 # import urllib.request # Delete this one
 
 from bs4 import BeautifulSoup
-from peewee import *
-import PyMySQL.cursors
+# from peewee import *
+# import PyMySQL.cursors
 #https://pymysql.readthedocs.io/en/latest/user/examples.html
 
-from database_info import Stock, db_info
+# from config import Stock, db_info
 
 # @TODO how to append to a text file
 # @TODO clean up variable names
+# @TODO missing a for loop to go through the symbolList
 
 loop_delay = 0 # delay in seconds to deal with potential server errors
 
 closingDate = datetime.datetime.now()
 minmax = re.compile(r'(\S+)\s\-\s(\S+)')
 symbolList = []
-csvfile = 'Resources/SP500.csv'
-sp500_csv = csv.reader(csvfile)
-for row in sp500_csv:
-    symbolList.append(row)
+
+with open('SP500.csv') as csvfile:
+    sp500_csv = csv.DictReader(csvfile)
+    for row in sp500_csv:
+        symbolList.append(row['Ticker symbol'])
 
 # Pulling in the database login info from another file to keep login credentials private
-db = database_info.db_info()
-
-# class Stock(Model):
-#     '''required class to setting up the database table'''
-#     timestamp = DateTimeField(default=datetime.datetime.now())
-#     ticker = CharField(max_length=6)
-#     closing_price = DecimalField(max_digits=9, decimal_places=2)
-#     minimum_price = DecimalField(max_digits=9, decimal_places=2)
-#     maximum_price = DecimalField(max_digits=9, decimal_places=2)
-#     volume = IntegerField()
-
-#     class Meta:
-#         database = db
+# db = database_info.db_info()
 
 
 def initialize():
@@ -56,12 +46,22 @@ def initialize():
 def did_not_work():
     '''In the event the ticker did not scrape, return NAN and log it'''
     print('{} didnt work due to an Attribute Error'.format(symbol))
-            did_not_work_List.append(symbol)
-            return {'ticker':symbol,
-                    'closing_price':None,
-                    'minimum_price':None,
-                    'maximum_price':None,
-                    'volume':None}
+    did_not_work_List.append(symbol)
+    return {'ticker':symbol,
+            'closing_price':None,
+            'minimum_price':None,
+            'maximum_price':None,
+            'volume':None}
+
+
+def loop_scraper(list):
+    '''Function that builds and returns the scraped data table'''
+
+    for symbols in list:
+        scraped_stock_dict.append(quote_scraper(symbols))
+
+    time.sleep(loop_delay)
+
 
 def quote_scraper(symbol):
     '''Scrapes the following stock quote information for the day:
@@ -78,7 +78,7 @@ def quote_scraper(symbol):
         # page = urllib.request.urlopen(quote_page)
         page = requests.get(quote_page)
         # page = requests.get(quote_page)
-        soup = BeautifulSoup(page, "html.parser")
+        soup = BeautifulSoup(page.text, "html.parser")
 
         # Scraping the closing price
         price_box = soup.find('span', id='quote_val')
@@ -99,29 +99,21 @@ def quote_scraper(symbol):
         # Scraping the volume traded
         volumeTraded = data_data[1].replace(',', '')
 
-        return {'ticker':symbol,
-                'closing_price':float(closingPrice),
-                'minimum_price':float(minRange),
-                'maximum_price':float(maxRange),
-                'volume':int(volumeTraded)}
+        stockinfo = {'ticker':symbol,
+                                    'closing_price':float(closingPrice),
+                                    'minimum_price':float(minRange),
+                                    'maximum_price':float(maxRange),
+                                    'volume':int(volumeTraded)}
+
+        scraped_stock_dict.append(stockinfo)
+        
+        print(stockinfo)
 
     except AttributeError:
         did_not_work()
 
-    except HTTPError:
-        did_not_work()
-
-
-def loop_scraper(list):
-    '''Function that builds and returns the scraped data table'''
-    scraped_stock_dict = []
-    ticker_did_not_work_List = []
-
-    for symbols in list:
-        scraped_stock_dict.append(quote_scraper(symbols))
-
-    time.sleep(loop_delay)
-    return scraped_stock_dict, ticker_did_not_work_List
+    # except HTTPError:
+    #     did_not_work()
 
 
 def write_to_DB(data_dict_list):
@@ -132,12 +124,12 @@ def write_to_DB(data_dict_list):
             row.closingPrice, row.minRange, row.maxRange, row.volumeTraded)
         print(details)
 
-        Stock.create(timestamp=closingDate,
-                        ticker=row.ticker,
-                        closing_price=row.closing_price,
-                        minimum_price=row.minimum_price,
-                        maximum_price=row.maximum_price,
-                        volume=row.volume)
+        # Stock.create(timestamp=closingDate,
+        #                 ticker=row.ticker,
+        #                 closing_price=row.closing_price,
+        #                 minimum_price=row.minimum_price,
+        #                 maximum_price=row.maximum_price,
+        #                 volume=row.volume)
 
         print('DONE \n')
         print('-'*len(details))
@@ -161,14 +153,18 @@ def write_to_log(time_to_finish, did_not_work_List):
     # file.append()
 
 # start the database connection
-initialize()
+# initialize()
 
 # Calculating the time it takes to complete all the database entries
 start_time = datetime.datetime.now()
 
-scraped_stock_dict, did_not_work_List = loop_scraper(symbolList)
+scraped_stock_dict = []
+did_not_work_List = []
+
+loop_scraper(symbolList)
 
 end_time = datetime.datetime.now()
 time_elapsed = end_time - start_time
 
 
+print(scraped_stock_dict)
