@@ -16,13 +16,13 @@ from bs4 import BeautifulSoup
 # import PyMySQL.cursors
 #https://pymysql.readthedocs.io/en/latest/user/examples.html
 
-# from config import Stock, db_info
+# from config import Stock, db_info, loop_delay
 
 # @TODO how to append to a text file
 # @TODO clean up variable names
 # @TODO missing a for loop to go through the symbolList
 
-loop_delay = 0 # delay in seconds to deal with potential server errors
+
 
 closingDate = datetime.datetime.now()
 minmax = re.compile(r'(\S+)\s\-\s(\S+)')
