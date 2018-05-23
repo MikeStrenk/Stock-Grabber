@@ -128,12 +128,14 @@ def write_to_DB(data_dict_list):
                        row.volumeTraded)
         print(details)
 
-        Stock.create(timestamp=closingDate,
-                        ticker=row.ticker,
-                        closing_price=row.closing_price,
-                        minimum_price=row.minimum_price,
-                        maximum_price=row.maximum_price,
-                        volume=row.volume)
+        stock_to_save = Stock.create(timestamp=closingDate,
+                                     ticker=row.ticker,
+                                     closing_price=row.closing_price,
+                                     minimum_price=row.minimum_price,
+                                     maximum_price=row.maximum_price,
+                                     volume=row.volume)
+
+        stock_to_save.save()
 
         print('DONE \n')
         print('-'*len(details))
