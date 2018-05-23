@@ -9,19 +9,12 @@ import datetime
 import requests
 import time
 
-# import urllib.request # Delete this one
-
 from bs4 import BeautifulSoup
-from peewee import *
-# import PyMySQL.cursors
-# https://pymysql.readthedocs.io/en/latest/user/examples.html
+import peewee
 
-from config import Stock_db, db_info, loop_delay
+from config import db
 
-# @TODO how to append to a text file
-# @TODO clean up variable names
-# @TODO missing a for loop to go through the symbolList
-
+loop_delay = 0 # delay in seconds to deal with potential server errors
 closing_date = datetime.datetime.now()
 min_max = re.compile(r'(\S+)\s\-\s(\S+)')
 symbol_list = []
@@ -31,14 +24,29 @@ with open('SP500.csv') as csvfile:
     for row in sp500_csv:
         symbol_list.append(row['Ticker symbol'])
 
-# Pulling in the database login info from another file
-db = db_info()
+
+class Stock_db(peewee.Model):
+    '''required class to setting up the database table'''
+    id = peewee.PrimaryKeyField(null=False)
+    timestamp = peewee.DateTimeField(default=datetime.datetime.now())
+    ticker = peewee.CharField(max_length=6)
+    closing_price = peewee.DecimalField(max_digits=9, decimal_places=2)
+    minimum_price = peewee.DecimalField(max_digits=9, decimal_places=2)
+    maximum_price = peewee.DecimalField(max_digits=9, decimal_places=2)
+    volume = peewee.IntegerField()
+
+    class Meta:
+        database = db
 
 
 def initialize():
     '''Connect to the database and create the table if it doesn't exist'''
     db.connect()
-    db.create_tables([Stock_db], safe=True)
+    try:
+        db.create_tables([Stock_db])
+        print('Table created because it didnt exist!')
+    except peewee.OperationalError:
+        print('Table already exists!')
 
 
 def did_not_work(ticker_symbol):
@@ -55,13 +63,22 @@ def did_not_work(ticker_symbol):
         pass
 
 
-def loop_scraper(list):
-    '''Function that builds and returns the scraped data table'''
+def write_to_DB(stock_info_dict):
+    '''Write entries in the database'''
+    progress_details = 'Saving stock info to database... \n'
+    print(progress_details)
 
-    for symbols in list:
-        scraped_stock_dict.append(quote_scraper(symbols))
+    stock_to_save = Stock_db(timestamp=closing_date,
+                             ticker=stock_info_dict['ticker'],
+                             closing_price=stock_info_dict['closing_price'],
+                             minimum_price=stock_info_dict['minimum_price'],
+                             maximum_price=stock_info_dict['maximum_price'],
+                             volume=stock_info_dict['volume'])
 
-    time.sleep(loop_delay)
+    stock_to_save.save()
+
+    print('DONE')
+    print('-'*len(progress_details))
 
 
 def quote_scraper(symbol):
@@ -76,9 +93,7 @@ def quote_scraper(symbol):
         print('Scraping quote infomation for: {}'.format(symbol))
 
         # Setting up the soup
-        # page = urllib.request.urlopen(quote_page)
         page = requests.get(quote_page)
-        # page = requests.get(quote_page)
         soup = BeautifulSoup(page.text, "html.parser")
 
         # Scraping the closing price
@@ -100,45 +115,22 @@ def quote_scraper(symbol):
         # Scraping the volume traded
         volumeTraded = data_data[1].replace(',', '')
 
-        stockinfo = {'ticker': symbol,
+        stock_info = {'ticker': symbol,
                      'closing_price': float(closingPrice),
                      'minimum_price': float(minRange),
                      'maximum_price': float(maxRange),
                      'volume': int(volumeTraded)}
 
-        scraped_stock_dict.append(stockinfo)
+        details = 'Price: {} | Price Range: {} - {} | Volume traded: {}'
+        print(details.format(closingPrice,
+                             minRange,
+                             maxRange,
+                             volumeTraded))
 
-        print(stockinfo)
+        write_to_DB(stock_info)
 
     except AttributeError:
         did_not_work(symbol)
-
-    # except HTTPError:
-    #     did_not_work()
-
-
-def write_to_DB(data_dict_list):
-    '''Writing the entries in the database'''
-    for row in data_dict_list:
-        # Printing the results to monitor scraping results
-        details = 'Price: {} | Price Range: {} - {} | Volume traded: {}'
-        details.format(row.closingPrice,
-                       row.minRange,
-                       row.maxRange,
-                       row.volumeTraded)
-        print(details)
-
-        stock_to_save = Stock.create(timestamp=closingDate,
-                                     ticker=row.ticker,
-                                     closing_price=row.closing_price,
-                                     minimum_price=row.minimum_price,
-                                     maximum_price=row.maximum_price,
-                                     volume=row.volume)
-
-        stock_to_save.save()
-
-        print('DONE \n')
-        print('-'*len(details))
 
 
 def write_to_log(time_to_finish, did_not_work_List):
@@ -154,9 +146,16 @@ def write_to_log(time_to_finish, did_not_work_List):
 
     print(output)
     file = open('log.txt', 'a')
-    file.append(output)
+    file.write(output)
     file.close()
 
+
+def loop_scraper(list):
+    '''For loop that scrapes info on the stocks and saves them to the db'''
+
+    for symbols in list:
+        quote_scraper(symbols)
+        time.sleep(loop_delay)
 
 # start the database connection
 initialize()
@@ -164,15 +163,13 @@ initialize()
 # Calculating the time it takes to complete all the database entries
 start_time = datetime.datetime.now()
 
-scraped_stock_dict = []
 did_not_work_List = []
 
-loop_scraper(symbol_list)
+loop_scraper(symbol_list[:10])
 
 end_time = datetime.datetime.now()
 time_elapsed = end_time - start_time
 
-
-print(scraped_stock_dict)
+write_to_log(time_elapsed, did_not_work_List)
 
 db.close()
