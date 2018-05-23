@@ -165,7 +165,7 @@ start_time = datetime.datetime.now()
 
 did_not_work_List = []
 
-loop_scraper(symbol_list[:10])
+loop_scraper(symbol_list)
 
 end_time = datetime.datetime.now()
 time_elapsed = end_time - start_time
