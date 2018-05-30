@@ -1,0 +1,8 @@
+
+    ---------------------------------------------------
+    Log Date: 2018-05-23 14:19:45.987410
+    The following stock tickers had an Attribute Error:
+    []
+    The program took this long to finish: 0:00:18.494364
+    ---------------------------------------------------
+    
