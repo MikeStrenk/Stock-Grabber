@@ -9,11 +9,16 @@ a database and inserts the following into another MongoDB:
 import pandas as pd
 from sqlalchemy import create_engine
 
-from config import connstr
+from connstring import connstr
 
 engine = create_engine(connstr)
 
 sql_query = 'select * from stock_db;'
 
-with engine.connect() as conn, conn.begin():
-    df = pd.read_sql(sql_query, conn)
+
+def pull_in_stock_data(query):
+    with engine.connect() as conn, conn.begin():
+        return pd.read_sql(query, conn)
+
+
+stocks_df = pull_in_stock_data(sql_query)
