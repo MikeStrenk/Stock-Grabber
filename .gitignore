@@ -1,6 +1,11 @@
 config.py
+connstring.py
 .DS_Store
 /__pycache__
 /.vscode
 /stock-analyst-app-env
 *.pyc
+/scraper/__pycache__
+*.ipynb
+*/.ipynb_checkpoints
+log.txt
