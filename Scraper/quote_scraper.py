@@ -1,7 +1,7 @@
 '''
-This python app scrapes the Wall Street Journal website for the closing stock
-quotes for all of the publically listed companies in the S&P 500. This data
-is stored in a database.
+This python script scrapes the Wall Street Journal website for the closing
+stock quotes for all of the publically listed companies in the S&P 500.
+This data is stored in a database.
 '''
 import re
 import csv
@@ -14,7 +14,7 @@ import peewee
 
 from config import db
 
-loop_delay = 0 # delay in seconds to deal with potential server errors
+loop_delay = 0  # delay in seconds to deal with potential server errors
 closing_date = datetime.datetime.now()
 min_max = re.compile(r'(\S+)\s\-\s(\S+)')
 symbol_list = []
@@ -116,10 +116,10 @@ def quote_scraper(symbol):
         volumeTraded = data_data[1].replace(',', '')
 
         stock_info = {'ticker': symbol,
-                     'closing_price': float(closingPrice),
-                     'minimum_price': float(minRange),
-                     'maximum_price': float(maxRange),
-                     'volume': int(volumeTraded)}
+                      'closing_price': float(closingPrice),
+                      'minimum_price': float(minRange),
+                      'maximum_price': float(maxRange),
+                      'volume': int(volumeTraded)}
 
         details = 'Price: {} | Price Range: {} - {} | Volume traded: {}'
         print(details.format(closingPrice,
@@ -156,6 +156,7 @@ def loop_scraper(list):
     for symbols in list:
         quote_scraper(symbols)
         time.sleep(loop_delay)
+
 
 # start the database connection
 initialize()
