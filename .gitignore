@@ -8,4 +8,3 @@ connstring.py
 /scraper/__pycache__
 *.ipynb
 */.ipynb_checkpoints
-log.txt
