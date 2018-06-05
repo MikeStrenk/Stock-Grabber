@@ -28,8 +28,9 @@ def pull_in_stock_data(query):
     with engine.connect() as conn, conn.begin():
         return pd.read_sql(query, conn)
 
+
 cols = 'timestamp, ticker, closing_price, minimum_price, maximum_price, volume'
-query = f'select {cols} from stock_db where timestamp in (select timestamp from stock_db) order by timestamp DESC, ticker ASC'
+query = 'select {} from stock_db where timestamp in (select timestamp from stock_db) order by timestamp DESC, ticker ASC'.format(cols)
 df = pull_in_stock_data(query)
 
 most_recent_days = list(df['timestamp'].sort_values(ascending=False).unique())
@@ -48,7 +49,7 @@ analysis_df = pre_df[pre_df['ticker'].isin(keep_list)]
 
 analysis_df = pd.merge(analysis_df, sp500_df, how='inner', left_on='ticker', right_index=True)
 
-analysis_df.sort_values(cols, ascending=[True, False], inplace = True)
+analysis_df.sort_values(cols, ascending=[True, False], inplace=True)
 analysis_df.set_index(cols, inplace=True)
 
 #################################
@@ -95,8 +96,7 @@ data = {'Company': names,
         'increase amount': delta_amount,
         'volume': volume,
         'Sector': sector,
-        'Sub Industry': sub_industry
-       }
+        'Sub Industry': sub_industry}
 
 
 df3 = pd.DataFrame(data, index=keep_list)
@@ -115,6 +115,7 @@ sector_df = analysis_df.reset_index().copy()
 sector_df = sector_df.groupby(['Sector', 'timestamp']).sum().sort_index(ascending=[True, False])
 
 delta_percent = []
+
 
 def get_percent_changes(lst):
     for companies in lst:
@@ -151,8 +152,7 @@ stockData = db.stockData
 sectorData = db.sectorData
 
 sector_document = {"date": date,
-                 "data" : sector_data
-                }
+                   "data": sector_data}
 
 sectorData_id = sectorData.insert_one(sector_document).inserted_id
 sectorData_id
