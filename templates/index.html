@@ -1,16 +1,45 @@
-
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Bootstrap 101 Template</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-    <div class="container">
-      <h1>Hello, world!</h1>
-    </div>
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-  </body>
+
+<head>
+  <title>S&P 500 Stock Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}">
+</head>
+
+<body>
+  <div class="center">
+    <h1>S&P 500 Stock Analysis</h1>
+  </div>
+
+  <h2>Best Performing Stocks</h2>
+
+  <div class="graph">
+    Placeholder for the list of best performing stocks.
+  </div>
+
+  <h2>Worst Performing Stocks</h2>
+
+  <div class="graph">
+    Placeholder for the list of worst stocks changes.
+  </div>
+
+  <h2>Performance by Sector</h2>
+
+  <div class="graph">
+    Placeholder for changes by sector.
+  </div>
+
+  <div class="footer">
+    <p>
+      <a href="https://github.com/MikeStrenk/Stock-Grabber">Visit this project on GitHub</a>
+    <p>
+      Created by Michael Strenk
+    </p>
+    </p>
+  </div>
+
+  <script></script>
+</body>
+
 </html>
