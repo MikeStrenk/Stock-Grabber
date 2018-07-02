@@ -2,9 +2,10 @@
 from datetime import datetime
 from flask import Flask, jsonify, abort, request, render_template
 from flask_pymongo import PyMongo
+import os
 from pymongo import MongoClient
 
-from connstring import conn_string_mongo
+conn_string_mongo = os.environ.get('conn_string_mongo')
 
 app = Flask(__name__)
 
@@ -89,4 +90,4 @@ def test():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
