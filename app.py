@@ -1,4 +1,5 @@
 #!flask/bin/python
+from datetime import datetime
 from flask import Flask, jsonify, abort, request, render_template
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
@@ -7,26 +8,65 @@ from connstring import conn_string_mongo
 
 app = Flask(__name__)
 
-# Need to configure these
-# app.config['MONGO_DBNAME'] = 'restdb'
-# app.config['MONGO_URI'] = 'mongodb://localhost:27017/restdb'
-
-# mongo = PyMongo(app)
+client = MongoClient(conn_string_mongo)
+db = client.test_database
+stockData = db.stockData
+sectorData = db.sectorData
 
 
 def get_sector_data():
-    client = MongoClient(conn_string_mongo)
-    db = client.test_database
-    sectorData = db.sectorData
-    return sectorData.find_one()
+    data = sectorData.find_one()
+    ranking = {}
+    for items in data['data']:
+        rank = items['Rank']
+        name = items['Sector']
+        delta = items['pct_delta']
+        ranking.update({rank: {'name': name, 'delta': delta}})
+    return ranking
+
+
+@app.route('/test')
+def test():
+    date_obj = stockData.find({}, {'date': 1, '_id': 0}).sort([('date', -1)]).limit(1)
+    date_container = {}
+    for items in date_obj:
+        # date_container.append(str(items['date']))
+        datecontainer['date'] = items['date']
+
+    date = date_container[0]
+    date = date_container
+
+
+    data = stockData.find({'date': datecontainer}, {'date': 1,
+                                                     '_id': 0,
+                                                     'Ticker': 1,
+                                                     'quote price': 1}).limit(10)
+
+    data_container = ''
+    for items in data:
+        data_container += str(items)
+
+    return data_container
 
 
 @app.route('/')
 def return_index_page():
-    return render_template('index.html')
+    best_stock_1 = 'AAPL'
+    best_stock_2 = 'AMZ'
+    best_stock_3 = 'GOOGL'
+    daily_sector_ranking = get_sector_data()
+    return render_template('index.html',
+                           best_stock_1='AAPL',
+                           best_stock_2='AMZ',
+                           best_stock_3='GOOGL',
+                           daily_sector_ranking=daily_sector_ranking
+                           )
 
 
-app.run(debug=True, port=8000, host='0.0.0.0')
+if __name__ == '__main__':
+    app.run(debug=True)
+
+# app.run(debug=True, port=8000, host='0.0.0.0')
 
 # tasks = [
 #     {
@@ -56,7 +96,3 @@ app.run(debug=True, port=8000, host='0.0.0.0')
 #     if len(task) == 0:
 #         abort(404)
 #     return jsonify({'task': task[0]})
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
