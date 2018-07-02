@@ -1,5 +1,4 @@
 #!flask/bin/python
-# from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 from flask import Flask, jsonify, abort, request, render_template
 from flask_pymongo import PyMongo
@@ -13,18 +12,6 @@ client = MongoClient(conn_string_mongo)
 db = client.test_database
 stockData = db.stockData
 sectorData = db.sectorData
-
-# sched = BlockingScheduler()
-# sched.start()
-
-
-# def job():
-#     '''
-#      Do your job here
-#     '''
-#     pass
-
-# sched.add_interval_job(job,minutes=10)
 
 
 def get_stock_data(sort_direction, count=5):
