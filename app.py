@@ -50,11 +50,6 @@ def get_sector_data():
     return ranking
 
 
-@app.route('/test')
-def test():
-    return "test page"
-
-
 @app.route('/')
 def return_index_page():
     best_stocks = get_stock_data(sort_direction=-1)
@@ -67,36 +62,31 @@ def return_index_page():
                            )
 
 
+@app.route('/<ticker>')
+def ticker_search(ticker):
+    date_obj = stockData.find({},
+                              {'date': 1,
+                               '_id': 0}).sort([('date', -1)]).limit(1)
+    date_dict = {}
+    for items in date_obj:
+        date_dict['date'] = items['date']
+
+    stock_data = stockData.find_one({'date': date_dict['date'],
+                                     'Ticker': ticker},
+                                    {'date': 1,
+                                     '_id': 0,
+                                     'Ticker': 1,
+                                     'Company': 1,
+                                     'quote price': 1,
+                                     'growth': 1})
+
+    return str(stock_data)
+
+
+@app.route('/test')
+def test():
+    return "test page"
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-# app.run(debug=True, port=8000, host='0.0.0.0')
-
-# tasks = [
-#     {
-#         'id': 1,
-#         'title': u'Buy groceries',
-#         'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-#         'done': False
-#     },
-#     {
-#         'id': 2,
-#         'title': u'Learn Python',
-#         'description': u'Need to find a good Python tutorial on the web',
-#         'done': False
-#     }
-# ]
-
-# @app.route('/todo/api/v1.0/tasks', methods=['GET'])
-# def get_tasks():
-#     return jsonify({'tasks': tasks})
-#
-#
-#
-#
-# @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
-# def get_task(task_id):
-#     task = [task for task in tasks if task['id'] == task_id]
-#     if len(task) == 0:
-#         abort(404)
-#     return jsonify({'task': task[0]})
