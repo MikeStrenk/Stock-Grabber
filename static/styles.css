@@ -1,7 +1,7 @@
 body            { font-family: sans-serif; background: #FFF; }
 a               { color: #286DA8; }
 h1, h2          { color: #1A2930; font-family: 'Garamond'; margin: 10px; text-align: center;}
-h1              { text-align: center; padding-bottom: 10px; }
+h1              { text-align: center; padding: 10px; }
 h2              { font-size: 1.2em; }
 
 .center {
@@ -9,12 +9,26 @@ h2              { font-size: 1.2em; }
 }
 
 .graph {
-  margin: 0 auto;
-  width: 500px;
-  background: #F5F5F5;
-  padding: 20px;
-  border: solid #E0E0E0 1px;
-  border-radius: 10px;
+    margin: 0 auto;
+    width: 300px;
+    text-align: center;
+    background: #F5F5F5;
+    padding: 10px;
+    border: solid #E0E0E0 1px;
+    border-radius: 10px;
+}
+
+.ticker {
+    text-align: left;
+    font-weight: bold;
+    display: inline-block;
+    padding: 10px;
+}
+
+.percent_delta {
+    text-align: right;
+    display: inline-block;
+    padding: 10px;
 }
 
 .footer {
