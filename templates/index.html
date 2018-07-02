@@ -16,18 +16,61 @@
 
   <div class="graph">
     Placeholder for the list of best performing stocks.
+    <ol>
+      <li>
+        {{  best_stock_1  }}
+      </li>
+      <li>
+        {{  best_stock_2  }}
+      </li>
+      <li>
+        {{  best_stock_3  }}
+      </li>
+      <li>
+        {{  best_stock_4  }}
+      </li>
+      <li>
+        {{  best_stock_5  }}
+      </li>
+    </ol>
   </div>
 
   <h2>Worst Performing Stocks</h2>
 
   <div class="graph">
-    Placeholder for the list of worst stocks changes.
+    <div class="graph">
+      <div class='ticker'>
+        <p> {{  worst_stock_ranking[1]['name']  }} </p>
+        <p> {{  worst_stock_ranking[2]['name']  }} </p>
+        <p> {{  worst_stock_ranking[3]['name']  }} </p>
+        <p> {{  worst_stock_ranking[4]['name']  }} </p>
+        <p> {{  worst_stock_ranking[5]['name']  }} </p>
+      </div>
+      <div class='percent_delta'>
+        <p> {{  worst_stock_ranking[1]['delta']  }}% </p>
+        <p> {{  worst_stock_ranking[2]['delta']  }}% </p>
+        <p> {{  worst_stock_ranking[3]['delta']  }}% </p>
+        <p> {{  worst_stock_ranking[4]['delta']  }}% </p>
+        <p> {{  worst_stock_ranking[5]['delta']  }}% </p>
+      </div>
   </div>
 
   <h2>Performance by Sector</h2>
-
   <div class="graph">
-    Placeholder for changes by sector.
+    <div class='ticker'>
+      <p> {{  daily_sector_ranking[1]['name']  }} </p>
+      <p> {{  daily_sector_ranking[2]['name']  }} </p>
+      <p> {{  daily_sector_ranking[3]['name']  }} </p>
+      <p> {{  daily_sector_ranking[4]['name']  }} </p>
+      <p> {{  daily_sector_ranking[5]['name']  }} </p>
+    </div>
+    <div class='percent_delta'>
+      <p> {{  daily_sector_ranking[1]['delta']  }}% </p>
+      <p> {{  daily_sector_ranking[2]['delta']  }}% </p>
+      <p> {{  daily_sector_ranking[3]['delta']  }}% </p>
+      <p> {{  daily_sector_ranking[4]['delta']  }}% </p>
+      <p> {{  daily_sector_ranking[5]['delta']  }}% </p>
+    </div>
   </div>
 
   <div class="footer">
