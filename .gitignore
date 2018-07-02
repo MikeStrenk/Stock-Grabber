@@ -9,3 +9,4 @@ connstring.py
 *.ipynb
 */.ipynb_checkpoints
 log.txt
+/examples
