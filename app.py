@@ -1,11 +1,14 @@
 #!flask/bin/python
 from datetime import datetime
-from flask import Flask, jsonify, abort, request, render_template
+from flask import Flask, jsonify, abort, request, render_template, redirect
 from flask_pymongo import PyMongo
 import os
 from pymongo import MongoClient
 
+
 conn_string_mongo = os.environ.get('conn_string_mongo')
+
+# from connstring import conn_string_mongo
 
 app = Flask(__name__)
 
@@ -63,6 +66,12 @@ def return_index_page():
                            )
 
 
+@app.route('/', methods=['POST'])
+def test():
+    text = request.form['search']
+    return redirect('/'+text)
+
+
 @app.route('/<ticker>')
 def ticker_search(ticker):
     date_obj = stockData.find({},
@@ -81,12 +90,7 @@ def ticker_search(ticker):
                                      'quote price': 1,
                                      'growth': 1})
 
-    return str(stock_data)
-
-
-@app.route('/test')
-def test():
-    return "test page"
+    return jsonify(stock_data)
 
 
 if __name__ == '__main__':

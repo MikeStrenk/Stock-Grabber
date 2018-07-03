@@ -4,8 +4,18 @@ h1, h2          { color: #1A2930; font-family: 'Garamond'; margin: 10px; text-al
 h1              { text-align: center; padding: 10px; }
 h2              { font-size: 1.2em; }
 
-.center {
-    border-bottom: 2px solid #535353;
+.top {
+  margin-left: auto;
+  margin-right: auto;
+  text-align:center;
+}
+
+.search {
+  margin-left: auto;
+  margin-right: auto;
+  float: right;
+  display: inline;
+  vertical-align: middle;
 }
 
 .graph {
