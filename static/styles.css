@@ -10,10 +10,10 @@ h2              { font-size: 1.2em; }
 
 .graph {
     margin: 0 auto;
-    width: 400px;
+    width: 350px;
     text-align: center;
     background: #F5F5F5;
-    padding: 10px;
+    padding: 5px;
     border: solid #E0E0E0 1px;
     border-radius: 10px;
 }
