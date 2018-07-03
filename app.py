@@ -6,9 +6,9 @@ import os
 from pymongo import MongoClient
 
 
-conn_string_mongo = os.environ.get('conn_string_mongo')
+# conn_string_mongo = os.environ.get('conn_string_mongo')
 
-# from connstring import conn_string_mongo
+from connstring import conn_string_mongo
 
 app = Flask(__name__)
 
@@ -94,4 +94,4 @@ def ticker_search(ticker):
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
