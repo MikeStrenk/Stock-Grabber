@@ -59,7 +59,7 @@ def return_index_page():
     best_stocks = get_stock_data(sort_direction=-1)
     worst_stocks = get_stock_data(sort_direction=1)
     daily_sector_ranking = get_sector_data()
-    return render_template('index.html',
+    return render_template('base.html',
                            best_stock_ranking=best_stocks,
                            worst_stock_ranking=worst_stocks,
                            daily_sector_ranking=daily_sector_ranking
@@ -94,4 +94,4 @@ def ticker_search(ticker):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
