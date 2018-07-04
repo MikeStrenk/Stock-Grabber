@@ -86,7 +86,7 @@ def ticker_search(ticker):
         date_dict['date'] = items['date']
 
     stock_data = stockData.find_one({'date': date_dict['date'],
-                                     'Ticker': ticker},
+                                     'Ticker': upper(ticker)},
                                     {'date': 1,
                                      '_id': 0,
                                      'Ticker': 1,
