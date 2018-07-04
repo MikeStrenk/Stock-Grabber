@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<br>
+<div align="center">
+<a href="/"><button class="button">Return Home</button></a>
+</div>
+<br>
+<div class='graph'>
+
+<h2> {{  stock_data['Ticker']  }}: {{  stock_data['Company']  }} </h2>
+<hr>
+
+<p> Quote Price: ${{  stock_data['quote price']  }} </p>
+<p> Price Change: {{  stock_data['growth']  }}% </p>
+
+</div>
+
+<p class="dates"> {{  stock_date  }} </p>
+<br>
+{% endblock %}

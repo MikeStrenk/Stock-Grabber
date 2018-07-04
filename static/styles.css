@@ -1,8 +1,10 @@
 body            { font-family: sans-serif; background: #FFF; }
 a               { color: #286DA8; }
-h1, h2          { color: #1A2930; font-family: 'Garamond'; margin: 10px; text-align: center;}
+h1, h2          { color: #1A2930; font-family: 'Palatino'; margin: 5px; text-align: center;}
 h1              { text-align: center; padding: 10px; }
 h2              { font-size: 1.2em; }
+h3              { font-size: 14px; }
+hr              { border-color: #E0E0E0; height: 0px; border: 1; border-top: 1px}
 
 .top {
   margin-left: auto;
@@ -10,35 +12,68 @@ h2              { font-size: 1.2em; }
   text-align:center;
 }
 
-.search {
-  margin-left: auto;
-  margin-right: auto;
-  float: right;
-  display: inline;
-  vertical-align: middle;
+.search_field {
+  padding: 5px;
+  border:	1px solid #E0E0E0;
+  border-radius: 5px
+}
+
+.button {
+  padding: 5px;
+  background-color:	#F5F5F5;
+  border:	1px solid #E0E0E0;
+  font-weight: bold;
+  border-radius: 5px;
+  text-decoration:none;
+}
+
+.button a {
+  padding: 5px;
+  background-color:	#F5F5F5;
+  border:	1px solid #E0E0E0;
+  font-weight: bold;
+  border-radius: 5px;
+  text-decoration:none;
+}
+
+.button:hover {
+  padding: 5px;
+  background-color:	#4286f4;
+  border:		1px solid #376fcc;
+  color: #FFF;
+  font-weight:		bold;
+  border-radius: 5px;
+  text-decoration:none;
 }
 
 .graph {
     margin: 0 auto;
-    width: 350px;
+    width: 310px;
     text-align: center;
     background: #F5F5F5;
     padding: 5px;
     border: solid #E0E0E0 1px;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
-.ticker {
+.tickerDiv {
     text-align: left;
     font-weight: bold;
     display: inline-block;
-    padding: 10px;
+    padding: 5px;
 }
 
-.percent_delta {
+.percent_deltaDiv {
     text-align: right;
+    margin-left: 15px;
     display: inline-block;
-    padding: 10px;
+    padding: 5px;
+}
+
+.dates {
+    color: #999999;
+    font-size: 10px;
+    text-align: center;
 }
 
 .footer {
