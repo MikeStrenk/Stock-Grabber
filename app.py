@@ -6,8 +6,8 @@ import os
 from pymongo import MongoClient
 
 # Use the os.environ for Heroku and import for local development
-# conn_string_mongo = os.environ.get('conn_string_mongo')
-from connstring import conn_string_mongo
+conn_string_mongo = os.environ.get('conn_string_mongo')
+# from connstring import conn_string_mongo
 
 app = Flask(__name__)
 
@@ -86,7 +86,7 @@ def ticker_search(ticker):
         date_dict['date'] = items['date']
 
     stock_data = stockData.find_one({'date': date_dict['date'],
-                                     'Ticker': upper(ticker)},
+                                     'Ticker': ticker.upper()},
                                     {'date': 1,
                                      '_id': 0,
                                      'Ticker': 1,
@@ -112,4 +112,4 @@ def ticker_search(ticker):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
