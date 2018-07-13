@@ -13,6 +13,7 @@ import pymysql
 
 # Use the os.environ for Heroku and import for local development
 conn_string_mongo = os.environ.get('conn_string_mongo')
+connstr = os.environ.get('connstr')
 # from connstring import conn_string_mongo, connstr
 
 app = Flask(__name__)
