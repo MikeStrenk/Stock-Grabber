@@ -2,15 +2,22 @@
 from datetime import datetime
 from flask import Flask, jsonify, abort, request, render_template, redirect
 from flask_pymongo import PyMongo
+import json
 import os
 from pymongo import MongoClient
+import sqlalchemy
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, func
+import pymysql
 
 # Use the os.environ for Heroku and import for local development
-# conn_string_mongo = os.environ.get('conn_string_mongo')
-from connstring import conn_string_mongo
+conn_string_mongo = os.environ.get('conn_string_mongo')
+# from connstring import conn_string_mongo, connstr
 
 app = Flask(__name__)
 
+# MONGO
 client = MongoClient(conn_string_mongo)
 db = client.test_database
 stockData = db.stockData
@@ -19,6 +26,14 @@ sectorData = db.sectorData
 date_obj = stockData.find({},
                           {'date': 1,
                            '_id': 0}).sort([('date', -1)]).limit(1)
+
+# SQL
+engine = create_engine(connstr)
+Base = automap_base()
+Base.prepare(engine, reflect=True)
+stock_db = Base.classes.stock_db
+session = Session(engine)
+
 
 def get_stock_data(sort_direction, count=5):
     '''sort_direction should be -1 for best stocks, 1 for worst stocks'''
@@ -70,13 +85,26 @@ def return_index_page():
 
 @app.route('/', methods=['POST'])
 @app.route('/<ticker>', methods=['POST'])
+@app.route('/test/<ticker>', methods=['POST'])
 def test(ticker=''):
     text = request.form['search']
     return redirect('/'+text)
 
 
 @app.route('/<ticker>')
-def ticker_search(ticker):
+def show_ticker_info(ticker):
+    data = []
+    results = session.query(stock_db.closing_price,
+                            stock_db.ticker,
+                            stock_db.timestamp.label('date')).\
+        filter(stock_db.ticker==ticker).\
+        order_by('date DESC').limit(5).all()
+
+    for result in results:
+        data.append({'ticker': ticker,
+                     'price': str(result.closing_price),
+                     'date': datetime.strftime(result.date, '%d-%b-%y')})
+
     date_obj = stockData.find({},
                               {'date': 1,
                                '_id': 0}).sort([('date', -1)]).limit(1)
@@ -98,18 +126,16 @@ def ticker_search(ticker):
         stock_date = {"date": ''}
 
         stock_list = ''
-        # data = stockData.distinct({'Ticker'})
-                                     # .sort([('Ticker', 1)])
-        # for item in data:
-        #     stock_list += '<p>' + item['Ticker'] + ': ' + item['Company'] + '</p>'
 
         return render_template('404.html', stock_list=stock_list), 404
     else:
         stock_date = 'Last Updated: ' + str(stock_data['date'].strftime('%I:%M %p Central, %A'))
-        return render_template('quote.html',
+
+    return render_template('quoteTest.html',
+                           data=data,
                            stock_data=stock_data,
                            stock_date=stock_date)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
