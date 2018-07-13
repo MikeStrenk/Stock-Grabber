@@ -4,6 +4,7 @@ This single page webapp displays analysis for the best and worst stocks from the
 
 ### [Live demo link](http://sp500-stock-quote-app.herokuapp.com/ "Stock Analysis App's Homepage")
 ![App Flowchart](images/homepage_screenshot.png)
+
 ## Technologies
 - Python (Pandas, Flask)
 - SQL & MongoDB
