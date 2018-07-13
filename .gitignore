@@ -10,3 +10,6 @@ connstring.py
 */.ipynb_checkpoints
 log.txt
 /examples
+/node_modules
+/services
+.eslintrc.js

@@ -1,22 +1,104 @@
-{% extends 'base.html' %}
-
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <br>
 <div align="center">
-<a href="/"><button class="button">Return Home</button></a>
+  <a href="/"><button class="button">Return Home</button></a>
 </div>
 <br>
 <div class='graph'>
-
-<h2> {{  stock_data['Ticker']  }}: {{  stock_data['Company']  }} </h2>
-<hr>
-
-<p> Quote Price: ${{  stock_data['quote price']  }} </p>
-<p> Price Change: {{  stock_data['growth']  }}% </p>
+  <h2> {{  stock_data['Ticker']  }}: {{  stock_data['Company']  }} </h2>
+  <hr>
+  <h2> Past Week Performance </h2>
 
 </div>
+<p class="dates"> {{ stock_date }} </p>
 
-<p class="dates"> {{  stock_date  }} </p>
-<br>
+<script src="https://d3js.org/d3.v4.js"></script>
+<script>
+  // SETTING UP THE SVG
+  const margin = {
+      top: 15,
+      right: 42,
+      bottom: 30,
+      left: 23
+    },
+    width = 310 - margin.left - margin.right,
+    height = 180 - margin.top - margin.bottom;
+
+  const svg = d3.select("body").selectAll(".graph").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+
+  // PARSING THE STOCK DATA
+  const data = JSON.parse('{{ data | tojson | safe }}');
+
+  function getPrices() {
+    return data.map(d => d.price);
+  }
+
+  function getDates() {
+    return data.map(d => d.date);
+  }
+
+  let max = d3.max(getPrices()),
+    min = d3.min(getPrices()),
+    range = max - min;
+
+  let lineData = getPrices().map(num => height - num);
+  lineData = getPrices().map(num => ((max - num) / range) * height);
+
+  lineData = lineData.map((num, i, data) => [i*(width/4), num]);
+
+  // var y = d3.scaleLinear()
+  //   .range([height, 0]);
+
+  // GENERATING THE STOCK LINE GRAPH
+  let lineGenerator = d3.line()
+    .curve(d3.curveNatural);
+  let pathString = lineGenerator(lineData);
+
+
+  // RIGHT AXIS
+  let rightScale = d3.scaleLinear()
+    .domain([max - (range * .05), min - (range * .05)])
+    .range([0, height]);
+  let rightAxisLine = d3.axisRight()
+    .scale(rightScale)
+    .ticks(5)
+    .tickFormat(d3.format('$'));
+
+  // BOTTOM AXIS
+  let dates = getDates();
+  let parseTime = d3.timeParse("%d-%b-%y");
+
+  dates = dates.map(d => parseTime(d));
+
+  let bottomScale = d3.scaleTime()
+    .range([0, width])
+    .domain(d3.extent(dates));
+  let bottomAxisLine = d3.axisBottom()
+    .scale(bottomScale)
+    .ticks(5);
+
+
+  // APPEND THE SVG
+  svg.append('path')
+    .attr('d', pathString);
+
+  svg.append('g')
+    .attr('class', 'rightAxis')
+    .attr("transform", "translate(" + (width) + ", 0)")
+    .call(rightAxisLine);
+
+  svg.append('g')
+    .attr('class', 'bottomAxis')
+    .attr("transform", "translate(0," + height + ")")
+    .call(bottomAxisLine);
+</script>
+
 {% endblock %}
