@@ -13,6 +13,7 @@ import pymysql
 
 # Use the os.environ for Heroku and import for local development
 conn_string_mongo = os.environ.get('conn_string_mongo')
+connstr = os.environ.get('connstr')
 # from connstring import conn_string_mongo, connstr
 
 app = Flask(__name__)
@@ -131,7 +132,7 @@ def show_ticker_info(ticker):
     else:
         stock_date = 'Last Updated: ' + str(stock_data['date'].strftime('%I:%M %p Central, %A'))
 
-    return render_template('quoteTest.html',
+    return render_template('quote.html',
                            data=data,
                            stock_data=stock_data,
                            stock_date=stock_date)
