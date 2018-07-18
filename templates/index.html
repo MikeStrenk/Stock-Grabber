@@ -10,7 +10,9 @@
           {% for company in best_stock_ranking %}
           <div class="row">
             <div class="col-8 col-md-8">
-              <p class="card-text">{{ company['Company'] }}</p>
+              <a {{ 'href=' + '/{}'.format(company['Ticker']) }}>
+                <p class="card-text">{{ company['Company'] }}</p>
+              </a>
             </div>
             <div class="col-4 col-md-4">
               <p class="card-text" align="right">{{ company['growth'] }}%</p>
@@ -29,7 +31,9 @@
           {% for company in worst_stock_ranking %}
           <div class="row">
             <div class="col-8 col-md-8">
+              <a {{ 'href=' + '/{}'.format(company['Ticker']) }}>
               <p class="card-text">{{ company['Company'] }}</p>
+            </a>
             </div>
             <div class="col-4 col-md-4">
               <p class="card-text" align="right">{{ company['growth'] }}%</p>
