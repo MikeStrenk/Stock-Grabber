@@ -94,17 +94,18 @@ def return_index_page():
 
 @app.route('/list_of_companies')
 def return_company_list():
-    company_list = stockData.distinct({'Ticker'},{})
-                                    # {'_id': 0,
-                                    # 'Ticker': 1,
-                                    # 'Company': 1})
+    ticker_list = stockData.distinct('Ticker')
+    company_list = stockData.distinct('Company')
 
-    desired_dict = {'ticker': company['Ticker'],
-                    'Name': company['Company']}
+    company_dict = []
+    for tickers, companies in zip(ticker_list, company_list):
+        company_dict.append({'ticker': tickers,
+                             'name': companies})
 
-    companies = [desired_dict for company in companies]
-    return render_template('list_of_companies.html',
-                            companies=companies)
+    sorted_company_dict = sorted(company_dict, key=lambda k: k['name'])
+
+    return render_template('list_of_companies.html', date_obj=date_obj,
+                           sorted_company_dict=sorted_company_dict)
 
 
 @app.route('/<ticker>')
