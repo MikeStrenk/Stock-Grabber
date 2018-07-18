@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% block content %}
+
+<br>
+<div class="row justify-content-center">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header">Best Performing Stocks</div>
+      <div class="card-body">
+        <div class="col">
+          {% for company in companies %}
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ company['Ticker'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ company['Name'] }}%</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer text-muted">Stock Market Data Updated {{ best_stock_ranking[0]['date'].strftime('%I:%M %p Central, %A') }}</div>
+</div>
+
+{% endblock %}
