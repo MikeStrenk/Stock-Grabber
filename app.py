@@ -36,7 +36,7 @@ stock_db = Base.classes.stock_db
 session = Session(engine)
 
 
-def get_stock_data(sort_direction, count=5):
+def get_stock_data(sort_direction, count=8):
     '''sort_direction should be -1 for best stocks, 1 for worst stocks'''
     date_obj = stockData.find({},
                               {'date': 1,
@@ -72,6 +72,14 @@ def get_sector_data():
     return ranking
 
 
+@app.route('/', methods=['POST'])
+@app.route('/<ticker>', methods=['POST'])
+@app.route('/test/<ticker>', methods=['POST'])
+def test(ticker=''):
+    text = request.form['search']
+    return redirect('/'+text)
+
+
 @app.route('/')
 def return_index_page():
     best_stocks = get_stock_data(sort_direction=-1)
@@ -84,12 +92,19 @@ def return_index_page():
                            )
 
 
-@app.route('/', methods=['POST'])
-@app.route('/<ticker>', methods=['POST'])
-@app.route('/test/<ticker>', methods=['POST'])
-def test(ticker=''):
-    text = request.form['search']
-    return redirect('/'+text)
+@app.route('/list_of_companies')
+def return_company_list():
+    company_list = stockData.distinct({'Ticker'},{})
+                                    # {'_id': 0,
+                                    # 'Ticker': 1,
+                                    # 'Company': 1})
+
+    desired_dict = {'ticker': company['Ticker'],
+                    'Name': company['Company']}
+
+    companies = [desired_dict for company in companies]
+    return render_template('list_of_companies.html',
+                            companies=companies)
 
 
 @app.route('/<ticker>')
@@ -98,8 +113,8 @@ def show_ticker_info(ticker):
     results = session.query(stock_db.closing_price,
                             stock_db.ticker,
                             stock_db.timestamp.label('date')).\
-        filter(stock_db.ticker==ticker).\
-        order_by('date DESC').limit(5).all()
+        filter(stock_db.ticker == ticker).\
+        order_by('date DESC').limit(28).all()
 
     for result in results:
         data.append({'ticker': ticker,
@@ -123,16 +138,17 @@ def show_ticker_info(ticker):
                                      'quote price': 1,
                                      'growth': 1})
 
-    if stock_data == None:
+    if stock_data is None:
         stock_date = {"date": ''}
 
         stock_list = ''
 
         return render_template('404.html', stock_list=stock_list), 404
     else:
-        stock_date = 'Last Updated: ' + str(stock_data['date'].strftime('%I:%M %p Central, %A'))
+        stock_date = 'Last Updated: '
+        stock_date += str(stock_data['date'].strftime('%I:%M %p Central, %A'))
 
-    return render_template('quoteTest.html',
+    return render_template('quote.html',
                            data=data,
                            stock_data=stock_data,
                            stock_date=stock_date)
