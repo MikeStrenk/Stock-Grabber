@@ -7,55 +7,31 @@ a {
   color: #286DA8;
 }
 
-h1, h2 {
+h1, h2, h3 {
   color: #1A2930;
   font-family: 'Palatino';
-  margin: 5px;
   text-align: center;
 }
 
-h1 {
+.navbar-brand {
+  font-family: 'Palatino';
   text-align: center;
-  padding: 10px;
-}
-
-h2 {
-  font-size: 1.2em;
-}
-
-h3 {
-  font-size: 14px;
-}
-
-hr {
-  border-color: #E0E0E0;
-  height: 0px;
-  border: 1;
-  border-top: 1px
-}
-
-.top {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
-.search_field {
-  padding: 5px;
-  border: 1px solid #E0E0E0;
-  border-radius: 5px
-}
-
-.button {
-  padding: 5px;
-  background-color: #F5F5F5;
-  border: 1px solid #E0E0E0;
   font-weight: bold;
-  border-radius: 5px;
-  text-decoration: none;
 }
 
-.button a {
+.navbar-brand:hover {
+  color: #428bca;
+}
+
+.card-header {
+  color: #1A2930;
+  font-family: 'Palatino';
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* .button a {
   padding: 5px;
   background-color: #F5F5F5;
   border: 1px solid #E0E0E0;
@@ -72,9 +48,9 @@ hr {
   font-weight: bold;
   border-radius: 5px;
   text-decoration: none;
-}
+} */
 
-.graph {
+/* .graph {
   margin: 0 auto;
   width: 310px;
   text-align: center;
@@ -82,9 +58,13 @@ hr {
   padding: 0px;
   border: solid #E0E0E0 1px;
   border-radius: 5px;
+} */
+
+.card-header {
+  padding: 5px;
 }
 
-.tickerDiv {
+/* .tickerDiv {
   text-align: left;
   font-weight: bold;
   display: inline-block;
@@ -96,7 +76,7 @@ hr {
   margin-left: 15px;
   display: inline-block;
   padding: 5px;
-}
+} */
 
 .dates {
   color: #999999;
@@ -105,6 +85,12 @@ hr {
 }
 
 .footer {
+  text-align: center;
+  font-size: 14px;
+}
+
+.card-footer {
+  font-size: 10px;
   text-align: center;
 }
 

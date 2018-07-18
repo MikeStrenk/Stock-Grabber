@@ -1,68 +1,98 @@
-{% extends 'base.html' %}
-
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <br>
-<div class="graph">
-  <h2>Best Performing Stocks</h2>
-  <hr>
-  <div class='tickerDiv'>
-    <p> {{  best_stock_ranking[0]['Company']  }} </p>
-    <p> {{  best_stock_ranking[1]['Company']  }} </p>
-    <p> {{  best_stock_ranking[2]['Company']  }} </p>
-    <p> {{  best_stock_ranking[3]['Company']  }} </p>
-    <p> {{  best_stock_ranking[4]['Company']  }} </p>
-  </div>
-  <div class='percent_deltaDiv'>
-    <p> {{  best_stock_ranking[0]['growth']  }}% </p>
-    <p> {{  best_stock_ranking[1]['growth']  }}% </p>
-    <p> {{  best_stock_ranking[2]['growth']  }}% </p>
-    <p> {{  best_stock_ranking[3]['growth']  }}% </p>
-    <p> {{  best_stock_ranking[4]['growth']  }}% </p>
-  </div>
-</div> <br>
-
-
-<div class="graph">
-  <h2>Worst Performing Stocks</h2>
-  <hr>
-    <div class='tickerDiv'>
-      <p> {{  worst_stock_ranking[0]['Company']  }} </p>
-      <p> {{  worst_stock_ranking[1]['Company']  }} </p>
-      <p> {{  worst_stock_ranking[2]['Company']  }} </p>
-      <p> {{  worst_stock_ranking[3]['Company']  }} </p>
-      <p> {{  worst_stock_ranking[4]['Company']  }} </p>
+<div class="row justify-content-center">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header">Best Performing Stocks</div>
+      <div class="card-body">
+        <div class="col">
+          {% for company in best_stock_ranking %}
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ company['Company'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ company['growth'] }}%</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-    <div class='percent_deltaDiv'>
-      <p> {{  worst_stock_ranking[0]['growth']  }}% </p>
-      <p> {{  worst_stock_ranking[1]['growth']  }}% </p>
-      <p> {{  worst_stock_ranking[2]['growth']  }}% </p>
-      <p> {{  worst_stock_ranking[3]['growth']  }}% </p>
-      <p> {{  worst_stock_ranking[4]['growth']  }}% </p>
-    </div>
-</div> <br>
-
-
-<div class="graph">
-  <h2>Performance by Sector</h2>
-  <hr>
-  <div class='tickerDiv'>
-    <p> {{  daily_sector_ranking[1]['name']  }} </p>
-    <p> {{  daily_sector_ranking[2]['name']  }} </p>
-    <p> {{  daily_sector_ranking[3]['name']  }} </p>
-    <p> {{  daily_sector_ranking[4]['name']  }} </p>
-    <p> {{  daily_sector_ranking[5]['name']  }} </p>
   </div>
-  <div class='percent_deltaDiv'>
-    <p> {{  daily_sector_ranking[1]['delta']  }}% </p>
-    <p> {{  daily_sector_ranking[2]['delta']  }}% </p>
-    <p> {{  daily_sector_ranking[3]['delta']  }}% </p>
-    <p> {{  daily_sector_ranking[4]['delta']  }}% </p>
-    <p> {{  daily_sector_ranking[5]['delta']  }}% </p>
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header">Worst Performing Stocks</div>
+      <div class="card-body">
+        <div class="col">
+          {% for company in worst_stock_ranking %}
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ company['Company'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ company['growth'] }}%</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+<div class="row justify-content-center">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header">Performance by Sector</div>
+      <div class="card-body">
+        <div class="col">
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ daily_sector_ranking[1]['name'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ daily_sector_ranking[1]['delta'] }}%</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ daily_sector_ranking[2]['name'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ daily_sector_ranking[2]['delta'] }}%</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ daily_sector_ranking[3]['name'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ daily_sector_ranking[3]['delta'] }}%</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ daily_sector_ranking[4]['name'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ daily_sector_ranking[4]['delta'] }}%</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8 col-md-8">
+              <p class="card-text">{{ daily_sector_ranking[5]['name'] }}</p>
+            </div>
+            <div class="col-4 col-md-4">
+              <p class="card-text" align="right">{{ daily_sector_ranking[5]['delta'] }}%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer text-muted">Stock Market Data Updated {{ best_stock_ranking[0]['date'].strftime('%I:%M %p Central, %A') }}</div>
+    </div>
+  </div>
+</div>
+</div>
 
-<p class='dates'> Stock Market Data Updated {{  best_stock_ranking[0]['date'].strftime('%I:%M %p Central, %A')  }}</p>
-<br>
 {% endblock %}

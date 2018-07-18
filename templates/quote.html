@@ -1,37 +1,38 @@
 {% extends 'base.html' %} {% block content %}
 <br>
-<div align="center">
-  <a href="/"><button class="button">Return Home</button></a>
+
+<div class="row justify-content-center">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-6">
+      <div class="card-header"> {{ stock_data['Ticker'] }}: {{ stock_data['Company'] }} </div>
+      <div id="graph" class="card-body" align='center'>
+
+      </div>
+      <div class="card-footer text-muted">{{ stock_date }}</div>
+    </div>
+  </div>
 </div>
 <br>
-<div class='graph'>
-  <h2> {{  stock_data['Ticker']  }}: {{  stock_data['Company']  }} </h2>
-  <hr>
-  <h2> Past Week Performance </h2>
-
-</div>
-<p class="dates"> {{ stock_date }} </p>
 
 <script src="https://d3js.org/d3.v4.js"></script>
 <script>
   // SETTING UP THE SVG
   const margin = {
-      top: 15,
-      right: 42,
-      bottom: 30,
-      left: 23
-    },
-    width = 310 - margin.left - margin.right,
-    height = 180 - margin.top - margin.bottom;
+    top: 15,
+    right: 42,
+    bottom: 30,
+    left: 23
+  };
+  let docWidth = document.getElementById("graph").clientWidth;
+  let width = docWidth - margin.left - margin.right;
+  const height = (width * .6) - margin.top - margin.bottom;
 
-  const svg = d3.select("body").selectAll(".graph").append("svg")
+  const svg = d3.select("body").selectAll(".card-body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
       "translate(" + margin.left + "," + margin.top + ")");
-
-
 
 
   // PARSING THE STOCK DATA
@@ -52,7 +53,7 @@
   let lineData = getPrices().map(num => height - num);
   lineData = getPrices().map(num => ((max - num) / range) * height);
 
-  lineData = lineData.map((num, i, data) => [i*(width/4), num]);
+  lineData = lineData.map((num, i, data) => [i * (width / 22), num]);
 
   // var y = d3.scaleLinear()
   //   .range([height, 0]);
