@@ -13,3 +13,4 @@ log.txt
 /node_modules
 /services
 .eslintrc.js
+img*
