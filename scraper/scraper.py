@@ -203,7 +203,8 @@ def pull_in_stock_data(query):
 
 
 cols = 'timestamp, ticker, closing_price, minimum_price, maximum_price, volume'
-query = 'select {} from stock_db where timestamp in (select timestamp from stock_db) order by timestamp DESC, ticker ASC'.format(cols)
+query = 'select {} from stock_db where timestamp in (select timestamp from stock_db) order by timestamp DESC, ticker ASC'.format(
+    cols)
 df = pull_in_stock_data(query)
 
 most_recent_days = list(df['timestamp'].sort_values(ascending=False).unique())
@@ -220,7 +221,8 @@ keep_list
 
 analysis_df = pre_df[pre_df['ticker'].isin(keep_list)]
 
-analysis_df = pd.merge(analysis_df, sp500_df, how='inner', left_on='ticker', right_index=True)
+analysis_df = pd.merge(analysis_df, sp500_df, how='inner',
+                       left_on='ticker', right_index=True)
 
 analysis_df.sort_values(cols, ascending=[True, False], inplace=True)
 analysis_df.set_index(cols, inplace=True)
@@ -274,7 +276,8 @@ data = {'Company': names,
 
 df3 = pd.DataFrame(data, index=keep_list)
 
-df3 = df3.sort_values('growth', ascending=False).reset_index().rename(columns={'index': "Ticker"})
+df3 = df3.sort_values('growth', ascending=False).reset_index().rename(
+    columns={'index': "Ticker"})
 date = df3['date'][0]
 stock_df_for_insert = df3.reset_index()
 stock_df_for_insert.rename(columns={'index': 'rank'})
@@ -285,12 +288,13 @@ stock_df_for_insert.rename(columns={'index': 'rank'})
 
 
 sector_df = analysis_df.reset_index().copy()
-sector_df = sector_df.groupby(['Sector', 'timestamp']).sum().sort_index(ascending=[True, False])
+sector_df = sector_df.groupby(
+    ['Sector', 'timestamp']).sum().sort_index(ascending=[True, False])
 
 delta_percent = []
 
 
-def get_percent_changes(lst):
+def get_percent_changes2(lst):
     for companies in lst:
         company_performance = sector_df.loc[companies]['closing_price']
         today = company_performance[0]
@@ -302,12 +306,13 @@ def get_percent_changes(lst):
 
 
 use_lst = list(sector_df.index.levels[0])
-get_percent_changes(use_lst)
+get_percent_changes2(use_lst)
 
 data = {'pct_delta': delta_percent}
 
 
-sector_df_for_insert = pd.DataFrame(data, index=use_lst).sort_values('pct_delta', ascending=False).reset_index()
+sector_df_for_insert = pd.DataFrame(data, index=use_lst).sort_values(
+    'pct_delta', ascending=False).reset_index()
 sector_df_for_insert.rename(columns={'index': 'Sector'}, inplace=True)
 sector_df_for_insert = sector_df_for_insert.reset_index()
 sector_df_for_insert.rename(columns={'index': 'Rank'}, inplace=True)
