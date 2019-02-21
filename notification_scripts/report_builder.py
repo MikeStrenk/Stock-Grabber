@@ -45,8 +45,13 @@ class Email(object):
         Sends the email
         '''
         if self.debug:
-            print('\nEmail Sent!\n')
+            print(f'\nEmail send with subject: {self.subject}\n')
 
+
+def send_notification(text):
+    notification = Email(debug=True)
+    notification.subject = text
+    notification.send()
 
 # class Chart(name, title):
 #     '''
