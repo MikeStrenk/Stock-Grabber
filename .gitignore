@@ -3,7 +3,7 @@ connstring.py
 .DS_Store
 /__pycache__
 /.vscode
-/stock-analyst-app-env
+/env
 *.pyc
 /scraper/__pycache__
 *.ipynb
