@@ -1,5 +1,5 @@
 import pandas as pd
-import strenkcloud
+import report_builder
 # from email_template import text_template, html_template
 from pymongo import MongoClient
 
